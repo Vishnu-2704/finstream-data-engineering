@@ -1,0 +1,39 @@
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Logs
+logs/
+*.log
+derby.log
+
+# Spark / Hive runtime files
+metastore_db/
+spark-warehouse/
+checkpoints/
+
+# Generated data
+data/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# dbt generated files
+finstream_dbt/target/
+finstream_dbt/dbt_packages/
+finstream_dbt/logs/
