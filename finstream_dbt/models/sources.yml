@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: finstream
+    database: finstream
+    schema: public
+    tables:
+      - name: market_metrics
