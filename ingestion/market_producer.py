@@ -32,6 +32,7 @@ SYMBOL = "AAPL"
 # Create Kafka producer
 producer = KafkaProducer(
     bootstrap_servers=KAFKA_SERVER,
+    key_serializer=lambda key: key.encode("utf-8"),
     value_serializer=lambda value: json.dumps(value).encode("utf-8")
 )
 
@@ -49,19 +50,27 @@ try:
             "apikey": api_key
         }
 
-        response = requests.get(
-            API_URL,
-            params=params,
-            timeout=10
-        )
+        try:
+            response = requests.get(
+                API_URL,
+                params=params,
+                timeout=10
+            )
 
-        response.raise_for_status()
+            response.raise_for_status()
 
-        data = response.json()
+            data = response.json()
+
+        except requests.RequestException as error:
+            print(f"API request failed: {error}")
+            print("Retrying in 10 seconds...")
+            time.sleep(10)
+            continue
 
         # Check API response
         if "price" not in data:
             print("Unexpected API response:", data)
+            print("Retrying in 10 seconds...")
             time.sleep(10)
             continue
 
@@ -73,7 +82,11 @@ try:
         }
 
         # Send event to Kafka
-        producer.send(KAFKA_TOPIC, value=event)
+        producer.send(
+            KAFKA_TOPIC,
+            key=SYMBOL,
+            value=event
+        )
 
         # Make sure the message is sent
         producer.flush()

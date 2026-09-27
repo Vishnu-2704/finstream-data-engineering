@@ -2,3 +2,5 @@ requests
 python-dotenv
 kafka-python
 pyspark
+dbt-core
+dbt-postgres
